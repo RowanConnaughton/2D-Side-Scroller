@@ -5,8 +5,8 @@ class Player {
 
     constructor(game){
         this.game = game;
-        this.width = 362;
-        this.height = 200;
+        this.width = 724;
+        this.height = 400;
         this.x = 0;
         this.y = this.game.height - this.height - this.game.groundMargin;
         this.vy = 0;

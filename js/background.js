@@ -26,11 +26,11 @@ class Layer {
 }
 
 
-class Background{
+export class Background{
     constructor(game){
         this.game = game;
-        this.width = 1000;
-        this.height = 800;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
         
         //get backgroundlayers images
         this.backgroundLayer1 = document.getElementById('bgLayer1');
@@ -70,4 +70,42 @@ class Background{
     }
 }
 
-export default Background;
+export class ForeGround {
+
+    constructor(game){
+        this.game = game;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        
+        
+        
+        this.foregroundLayer5 = document.getElementById('bgLayer5');
+
+        
+        this.layer5 = new Layer(this.game, this.width, this.height, 1,this.foregroundLayer5);
+        
+        
+
+        
+
+    }
+
+    update(){
+    
+        
+        this.layer5.update();
+        
+
+    
+
+    }
+
+    draw(context){
+    
+        this.layer5.draw(context);
+        
+
+    }
+
+}
+
