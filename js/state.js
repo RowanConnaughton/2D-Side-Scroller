@@ -33,9 +33,9 @@ export class StandingRight extends State {
     this.player.maxFrame = 9;
   }
   handleInput(input) {
-    if (input.includes("ArrowLeft")) {
+    if (input.includes("ArrowLeft") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_LEFT, -1);
-    } else if (input.includes("ArrowRight")) {
+    } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_LEFT, -1.5);
@@ -61,9 +61,9 @@ export class StandingLeft extends State {
     this.player.frameY = 1;
   }
   handleInput(input) {
-    if (input.includes("ArrowLeft")) {
+    if (input.includes("ArrowLeft") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_LEFT, -1);
-    } else if (input.includes("ArrowRight")) {
+    } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_LEFT, -1.5);
@@ -89,7 +89,7 @@ export class WalkingRight extends State {
     this.player.maxFrame = 9;
   }
   handleInput(input) {
-    if (input.includes("ArrowLeft")) {
+    if (input.includes("ArrowLeft") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_LEFT, -1.5);
@@ -98,8 +98,8 @@ export class WalkingRight extends State {
     } else if (input.includes("ArrowUp")) {
       this.player.setState(states.JUMPING_RIGHT, 1);
     } else if (input.includes(" ")) {
-        this.player.setState(states.ATTACK_RIGHT, 0);
-      }else if (!input.length) {
+      this.player.setState(states.ATTACK_RIGHT, 0);
+    } else if (!input.length) {
       this.player.setState(states.STANDING_RIGHT, 0);
     }
   }
@@ -117,7 +117,7 @@ export class WalkingLeft extends State {
     this.player.maxFrame = 9;
   }
   handleInput(input) {
-    if (input.includes("ArrowRight")) {
+    if (input.includes("ArrowRight") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_LEFT, -1.5);
@@ -125,11 +125,11 @@ export class WalkingLeft extends State {
       this.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowUp")) {
       this.player.setState(states.JUMPING_LEFT, -1);
-    }else if (input.includes(" ")) {
-        this.player.setState(states.ATTACK_LEFT, 0);
-      }else if (!input.length) {
-        this.player.setState(states.STANDING_LEFT, 0);
-      }
+    } else if (input.includes(" ")) {
+      this.player.setState(states.ATTACK_LEFT, 0);
+    } else if (!input.length) {
+      this.player.setState(states.STANDING_LEFT, 0);
+    }
   }
 }
 
@@ -145,19 +145,19 @@ export class RunningRight extends State {
     this.player.maxFrame = 9;
   }
   handleInput(input) {
-    if (input.includes("ArrowLeft")) {
+    if (input.includes("ArrowLeft") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_LEFT, -1.5);
-    } else if (input.includes("ArrowRight")) {
+    } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowUp")) {
       this.player.setState(states.JUMPING_RIGHT, 1);
-    }else if (input.includes(" ")) {
-        this.player.setState(states.ATTACK_RIGHT, 0);
-      }else if (!input.length) {
-        this.player.setState(states.STANDING_RIGHT, 0);
-      }
+    } else if (input.includes(" ")) {
+      this.player.setState(states.ATTACK_RIGHT, 0);
+    } else if (!input.length) {
+      this.player.setState(states.STANDING_RIGHT, 0);
+    }
   }
 }
 
@@ -173,19 +173,19 @@ export class RunningLeft extends State {
     this.player.maxFrame = 9;
   }
   handleInput(input) {
-    if (input.includes("ArrowLeft")) {
+    if (input.includes("ArrowLeft") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
       this.player.setState(states.RUNNING_RIGHT, 1.5);
-    } else if (input.includes("ArrowRight")) {
+    } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
       this.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowUp")) {
       this.player.setState(states.JUMPING_LEFT, -1);
-    }else if (input.includes(" ")) {
-        this.player.setState(states.ATTACK_LEFT, 0);
-      }else if (!input.length) {
-        this.player.setState(states.STANDING_LEFT, 0);
-      }
+    } else if (input.includes(" ")) {
+      this.player.setState(states.ATTACK_LEFT, 0);
+    } else if (!input.length) {
+      this.player.setState(states.STANDING_LEFT, 0);
+    }
   }
 }
 
@@ -244,8 +244,8 @@ export class AttackRight extends State {
   }
   handleInput(input) {
     if (!input.length) {
-        this.player.setState(states.STANDING_RIGHT, 0);
-      }
+      this.player.setState(states.STANDING_RIGHT, 0);
+    }
   }
 }
 
@@ -262,8 +262,8 @@ export class AttackLeft extends State {
   }
   handleInput(input) {
     if (!input.length) {
-        this.player.setState(states.STANDING_LEFT, 0);
-      }
+      this.player.setState(states.STANDING_LEFT, 0);
+    }
   }
 }
 
