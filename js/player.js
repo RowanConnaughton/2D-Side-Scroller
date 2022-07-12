@@ -18,8 +18,8 @@ import {
 class Player {
   constructor(game) {
     this.game = game;
-    this.width = 724;
-    this.height = 400;
+    this.width = 917;
+    this.height = 403;
     this.x = 0;
     this.y = this.game.height - this.height - this.game.groundMargin;
     this.vy = 0;
