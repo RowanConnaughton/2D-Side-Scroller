@@ -149,7 +149,9 @@ class Player {
           ) {
             //collision
 
-            enemy.x -= -300;
+            enemy.x -= -500;
+
+            this.setState(12, 0);
 
             //enemy.markedForDeletion = true;
             this.game.score--;
