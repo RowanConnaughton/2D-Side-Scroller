@@ -52,7 +52,6 @@ class Player {
   }
 
   update(input, deltaTime) {
-    this.checkCollision();
     this.currentState.handleInput(input);
 
     //horizontal movement
@@ -132,111 +131,6 @@ class Player {
     this.currentState = this.states[state];
     this.game.speed = this.game.maxSpeed * speed;
     this.currentState.enter();
-  }
-
-  checkCollision() {
-    this.game.enemies.forEach((enemy) => {
-      switch (enemy.type) {
-        case "small":
-          //attack
-          if (this.states[8] === this.currentState) {
-            if (
-              enemy.x + enemy.width * 0.4 - 50 <
-                this.x + this.width * 0.4 + this.width / 2.5 &&
-              enemy.x + enemy.width * 0.4 - 50 + enemy.width / 2 >
-                this.x + this.width * 0.4 &&
-              enemy.y + enemy.height * 0.3 <
-                this.y + 100 + this.height * 0.8 - 100 &&
-              enemy.y + enemy.height * 0.3 + enemy.height / 2 > this.y + 100
-            ) {
-              //collision
-
-              enemy.x -= -500;
-
-              enemy.lives--;
-
-              if (enemy.lives <= 0) {
-                enemy.markedForDeletion = true;
-                this.game.score += enemy.score;
-              }
-            }
-          }
-          //walk into enemy
-          if (
-            enemy.x + enemy.width * 0.4 - 50 <
-              this.x + this.width * 0.4 + this.width / 5 &&
-            enemy.x + enemy.width * 0.4 - 50 + enemy.width / 2 >
-              this.x + this.width * 0.4 &&
-            enemy.y + enemy.height * 0.3 <
-              this.y + 100 + this.height * 0.8 - 100 &&
-            enemy.y + enemy.height * 0.3 + enemy.height / 2 > this.y + 100
-          ) {
-            //collision
-
-            enemy.x -= -500;
-
-            this.setState(12, 0);
-
-            //enemy.markedForDeletion = true;
-            this.game.score--;
-            this.game.lives--;
-          } else {
-          }
-          break;
-
-        case "large":
-          if (this.states[8] === this.currentState) {
-            if (
-              enemy.x + enemy.width * 0.2 + 70 <
-                this.x + this.width * 0.4 + this.width / 2.5 &&
-              enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
-                this.x + this.width * 0.4 &&
-              enemy.y + enemy.height * 0.3 + 100 <
-                this.y + 100 + this.height * 0.8 - 100 &&
-              enemy.y + enemy.height * 0.3 + enemy.height / 2 > this.y + 100
-            ) {
-              //collision
-
-              enemy.x -= -500;
-
-              enemy.lives--;
-
-              if (enemy.lives <= 0) {
-                enemy.markedForDeletion = true;
-                this.game.score += enemy.score;
-              }
-            }
-          }
-          //walk into enemy
-          if (
-            enemy.x + enemy.width * 0.2 + 70 <
-              this.x + this.width * 0.4 + this.width / 5 &&
-            enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
-              this.x + this.width * 0.4 &&
-            enemy.y + enemy.height * 0.3 + 100 <
-              this.y + 100 + this.height * 0.8 - 100 &&
-            enemy.y + enemy.height * 0.3 + 100 + enemy.height / 2 > this.y + 100
-          ) {
-            //collision
-            enemy.markedForDeletion = true;
-            this.game.score--;
-          } else {
-          }
-          break;
-        default:
-          if (
-            enemy.x < this.x + this.width * 0.4 + this.width / 5 &&
-            enemy.x + enemy.width > this.x + this.width * 0.4 &&
-            enemy.y < this.y + 100 + this.height * 0.8 - 100 &&
-            enemy.y + enemy.height > this.y + 100
-          ) {
-            //collision
-            enemy.markedForDeletion = true;
-            this.game.score--;
-          } else {
-          }
-      }
-    });
   }
 }
 

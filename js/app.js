@@ -3,6 +3,7 @@ import InputHandler from "./input.js";
 import { Background, Foreground } from "./background.js";
 import { FlyingEnemy, GroundEnemySmall, GroundEnemyLarge } from "./enemy.js";
 import UI from "./UI.js";
+import { SmokeExplosion } from "./explosion.js";
 
 window.addEventListener("load", () => {
   const loading = document.getElementById("loading");
@@ -41,6 +42,8 @@ window.addEventListener("load", () => {
     }
 
     update(deltaTime) {
+      this.checkCollision();
+
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
       console.log("dist " + this.distance);
@@ -95,6 +98,142 @@ window.addEventListener("load", () => {
 
       this.enemies.push(new FlyingEnemy(this));
       console.log(this.enemies);
+    }
+
+    checkCollision() {
+      this.enemies.forEach((enemy) => {
+        switch (enemy.type) {
+          case "small":
+            //attack
+            if (this.player.states[8] === this.player.currentState) {
+              if (
+                enemy.x + enemy.width * 0.4 - 50 <
+                  this.player.x +
+                    this.player.width * 0.4 +
+                    this.player.width / 2.5 &&
+                enemy.x + enemy.width * 0.4 - 50 + enemy.width / 2 >
+                  this.player.x + this.player.width * 0.4 &&
+                enemy.y + enemy.height * 0.3 <
+                  this.player.y + 100 + this.player.height * 0.8 - 100 &&
+                enemy.y + enemy.height * 0.3 + enemy.height / 2 >
+                  this.player.y + 100
+              ) {
+                //collision
+
+                enemy.x -= -500;
+
+                enemy.lives--;
+
+                if (enemy.lives <= 0) {
+                  enemy.markedForDeletion = true;
+                  this.score += enemy.score;
+                }
+              }
+            }
+            //walk into enemy
+            if (
+              enemy.x + enemy.width * 0.4 - 50 <
+                this.player.x +
+                  this.player.width * 0.4 +
+                  this.player.width / 5 &&
+              enemy.x + enemy.width * 0.4 - 50 + enemy.width / 2 >
+                this.player.x + this.player.width * 0.4 &&
+              enemy.y + enemy.height * 0.3 <
+                this.player.y + 100 + this.player.height * 0.8 - 100 &&
+              enemy.y + enemy.height * 0.3 + enemy.height / 2 >
+                this.player.y + 100
+            ) {
+              //collision
+
+              enemy.x -= -500;
+
+              this.player.setState(12, 0);
+
+              //enemy.markedForDeletion = true;
+              this.score--;
+              this.lives--;
+            } else {
+            }
+            break;
+
+          case "large":
+            if (this.player.states[8] === this.player.currentState) {
+              if (
+                enemy.x + enemy.width * 0.2 + 70 <
+                  this.player.x +
+                    this.player.width * 0.4 +
+                    this.player.width / 2.5 &&
+                enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
+                  this.player.x + this.player.width * 0.4 &&
+                enemy.y + enemy.height * 0.3 + 100 <
+                  this.player.y + 100 + this.player.height * 0.8 - 100 &&
+                enemy.y + enemy.height * 0.3 + enemy.height / 2 >
+                  this.player.y + 100
+              ) {
+                //collision
+
+                enemy.x -= -500;
+
+                enemy.lives--;
+
+                if (enemy.lives <= 0) {
+                  enemy.markedForDeletion = true;
+                  this.score += enemy.score;
+                }
+              }
+            }
+            //walk into enemy
+            if (
+              enemy.x + enemy.width * 0.2 + 70 <
+                this.player.x +
+                  this.player.width * 0.4 +
+                  this.player.width / 5 &&
+              enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
+                this.player.x + this.player.width * 0.4 &&
+              enemy.y + enemy.height * 0.3 + 100 <
+                this.y + 100 + this.player.height * 0.8 - 100 &&
+              enemy.y + enemy.height * 0.3 + 100 + enemy.height / 2 >
+                this.player.y + 100
+            ) {
+              //collision
+              enemy.x -= -500;
+
+              this.player.setState(12, 0);
+
+              //enemy.markedForDeletion = true;
+              this.score -= 2;
+              this.lives--;
+            } else {
+            }
+            break;
+          default:
+            if (
+              enemy.x <
+                this.player.x +
+                  this.player.width * 0.4 +
+                  this.player.width / 5 &&
+              enemy.x + enemy.width > this.player.x + this.player.width * 0.4 &&
+              enemy.y < this.player.y + 100 + this.player.height * 0.8 - 100 &&
+              enemy.y + enemy.height > this.player.y + 100
+            ) {
+              //collision
+              this.player.setState(12, 0);
+              enemy.markedForDeletion = true;
+              this.score--;
+            } else {
+            }
+        }
+      });
+    }
+
+    addExplosions(enemy) {
+      this.explosions.push(
+        new SmokeExplosion(
+          this,
+          enemy.x + enemy.width * 0.5,
+          enemy.y + enemy.height * 0.5
+        )
+      );
     }
   }
 
