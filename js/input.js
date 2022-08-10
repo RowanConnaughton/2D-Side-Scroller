@@ -7,7 +7,7 @@ class InputHandler {
       if (
         (e.key === "ArrowDown" ||
           e.key === "ArrowUp" ||
-          e.key === "ArrowLeft" ||
+          // e.key === "ArrowLeft" ||
           e.key === "ArrowRight" ||
           e.key === "Shift" ||
           e.key === " ") &&

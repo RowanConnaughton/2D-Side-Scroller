@@ -155,6 +155,7 @@ class Player {
 
             //enemy.markedForDeletion = true;
             this.game.score--;
+            this.game.lives--;
           } else {
           }
           break;

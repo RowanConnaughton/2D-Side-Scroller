@@ -33,6 +33,7 @@ window.addEventListener("load", () => {
       this.enemyInterval = 3000;
       this.debug = true;
       this.score = 0;
+      this.lives = 5;
       this.fontColor = "white";
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
