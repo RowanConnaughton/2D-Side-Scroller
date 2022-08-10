@@ -11,8 +11,8 @@ window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = 1920;
+  canvas.height = 1080;
 
   //game class
   class Game {
@@ -23,22 +23,26 @@ window.addEventListener("load", () => {
       this.speed = 0;
       this.maxSpeed = 3;
       this.background = new Background(this);
-      this.Player = new Player(this);
+      this.player = new Player(this);
       this.foreground = new Foreground(this);
       this.input = new InputHandler(this);
       this.UI = new UI(this);
       this.enemies = [];
+      this.particles = [];
       this.enemyTimer = 0;
       this.enemyInterval = 3000;
       this.debug = true;
       this.score = 0;
       this.fontColor = "white";
+      this.player.currentState = this.player.states[0];
+      this.player.currentState.enter();
+      this.distance = 0;
     }
 
     update(deltaTime) {
       this.background.update();
-      this.Player.update(this.input.keys, deltaTime);
-
+      this.player.update(this.input.keys, deltaTime);
+      console.log("dist " + this.distance);
       //handle Enemies
       if (this.enemyTimer > this.enemyInterval) {
         this.addEnemy();
@@ -54,6 +58,12 @@ window.addEventListener("load", () => {
         }
       });
 
+      //handle Particles
+      this.particles.forEach((particle, index) => {
+        particle.update();
+        if (particle.markedForDeletion) this.particles.splice(index, 1);
+      });
+
       this.foreground.update();
     }
 
@@ -64,7 +74,11 @@ window.addEventListener("load", () => {
         enemy.draw(context);
       });
 
-      this.Player.draw(context);
+      this.particles.forEach((particle) => {
+        particle.draw(context);
+      });
+
+      this.player.draw(context);
 
       this.foreground.draw(context);
 
@@ -95,7 +109,6 @@ window.addEventListener("load", () => {
 
     game.update(deltaTime);
     game.draw(ctx);
-
     requestAnimationFrame(animate);
   }
 

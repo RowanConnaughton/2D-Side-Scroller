@@ -12,6 +12,7 @@ class Layer {
   update() {
     if (this.x < -this.width) {
       this.x = 0;
+      this.game.distance++;
     } else {
       this.x -= this.game.speed * this.speedModifier;
     }
@@ -32,8 +33,8 @@ class Layer {
 export class Background {
   constructor(game) {
     this.game = game;
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.width = 1920;
+    this.height = 1080;
 
     //get backgroundlayers images
     this.backgroundLayer1 = document.getElementById("bgLayer1");
@@ -103,8 +104,8 @@ export class Background {
 export class Foreground {
   constructor(game) {
     this.game = game;
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.width = 1920;
+    this.height = 1080;
 
     this.foregroundLayer5 = document.getElementById("bgLayer5");
 

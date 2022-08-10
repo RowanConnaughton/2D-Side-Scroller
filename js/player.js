@@ -34,26 +34,25 @@ class Player {
     this.speed = 0;
     this.maxSpeed = 5;
     this.states = [
-      new StandingRight(this),
-      new StandingLeft(this),
-      new WalkingRight(this),
-      new WalkingLeft(this),
-      new RunningRight(this),
-      new RunningLeft(this),
-      new JumpingRight(this),
-      new JumpingLeft(this),
-      new AttackRight(this),
-      new AttackLeft(this),
-      new DieRight(this),
-      new DieLeft(this),
-      new HurtRight(this),
-      new HurtLeft(this),
+      new StandingRight(this.game),
+      new StandingLeft(this.game),
+      new WalkingRight(this.game),
+      new WalkingLeft(this.game),
+      new RunningRight(this.game),
+      new RunningLeft(this.game),
+      new JumpingRight(this.game),
+      new JumpingLeft(this.game),
+      new AttackRight(this.game),
+      new AttackLeft(this.game),
+      new DieRight(this.game),
+      new DieLeft(this.game),
+      new HurtRight(this.game),
+      new HurtLeft(this.game),
     ];
-    this.currentState = this.states[0];
-    this.currentState.enter();
   }
 
   update(input, deltaTime) {
+    this.checkCollision();
     this.currentState.handleInput(input);
 
     //horizontal movement
@@ -85,8 +84,8 @@ class Player {
     }
 
     //vertical limit
-    if (this.y > this.gameHeight - this.height) {
-      this.y = this.gameHeight - this.height;
+    if (this.y > this.game.height - this.height - this.game.groundMargin) {
+      this.y = this.game.height - this.height - this.game.groundMargin;
     }
 
     //sprite animation
@@ -105,7 +104,12 @@ class Player {
 
   draw(context) {
     if (this.game.debug) {
-      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.strokeRect(
+        this.x + this.width * 0.4,
+        this.y + 100,
+        this.width / 5,
+        this.height * 0.8 - 100
+      );
     }
     context.drawImage(
       this.image,
@@ -120,14 +124,69 @@ class Player {
     );
   }
 
+  onGround() {
+    return this.y >= this.game.height - this.height - this.game.groundMargin;
+  }
+
   setState(state, speed) {
     this.currentState = this.states[state];
     this.game.speed = this.game.maxSpeed * speed;
     this.currentState.enter();
   }
 
-  onGround() {
-    return this.y >= this.game.height - this.height - this.game.groundMargin;
+  checkCollision() {
+    this.game.enemies.forEach((enemy) => {
+      switch (enemy.type) {
+        case "small":
+          if (
+            enemy.x + enemy.width * 0.4 - 50 <
+              this.x + this.width * 0.4 + this.width / 5 &&
+            enemy.x + enemy.width * 0.4 - 50 + enemy.width / 2 >
+              this.x + this.width * 0.4 &&
+            enemy.y + enemy.height * 0.3 <
+              this.y + 100 + this.height * 0.8 - 100 &&
+            enemy.y + enemy.height * 0.3 + enemy.height / 2 > this.y + 100
+          ) {
+            //collision
+
+            enemy.x -= -300;
+
+            //enemy.markedForDeletion = true;
+            this.game.score--;
+          } else {
+          }
+          break;
+
+        case "large":
+          if (
+            enemy.x + enemy.width * 0.2 + 70 <
+              this.x + this.width * 0.4 + this.width / 5 &&
+            enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
+              this.x + this.width * 0.4 &&
+            enemy.y + enemy.height * 0.3 + 100 <
+              this.y + 100 + this.height * 0.8 - 100 &&
+            enemy.y + enemy.height * 0.3 + 100 + enemy.height / 2 > this.y + 100
+          ) {
+            //collision
+            enemy.markedForDeletion = true;
+            this.game.score--;
+          } else {
+          }
+          break;
+        default:
+          if (
+            enemy.x < this.x + this.width * 0.4 + this.width / 5 &&
+            enemy.x + enemy.width > this.x + this.width * 0.4 &&
+            enemy.y < this.y + 100 + this.height * 0.8 - 100 &&
+            enemy.y + enemy.height > this.y + 100
+          ) {
+            //collision
+            enemy.markedForDeletion = true;
+            this.game.score--;
+          } else {
+          }
+      }
+    });
   }
 }
 

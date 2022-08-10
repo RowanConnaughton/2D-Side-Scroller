@@ -64,6 +64,7 @@ export class FlyingEnemy extends Enemy {
     this.image = document.getElementById("raven");
     this.angle = 0;
     this.va = Math.random() * 0.1 + 0.1;
+    this.type = "flying";
   }
 
   update(deltaTime) {
@@ -86,6 +87,30 @@ export class GroundEnemySmall extends Enemy {
     this.speedX = 1;
     this.speedY = 0;
     this.maxFrame = 23;
+    this.type = "small";
+  }
+
+  draw(context) {
+    if (this.game.debug) {
+      context.strokeRect(
+        this.x + this.width * 0.4 - 50,
+        this.y + this.height * 0.3,
+        this.width / 2,
+        this.height / 2
+      );
+    }
+
+    context.drawImage(
+      this.image,
+      this.frameX * this.width,
+      0,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
   }
 }
 
@@ -101,5 +126,29 @@ export class GroundEnemyLarge extends Enemy {
     this.speedX = 1;
     this.speedY = 0;
     this.maxFrame = 9;
+    this.type = "large";
+  }
+
+  draw(context) {
+    if (this.game.debug) {
+      context.strokeRect(
+        this.x + this.width * 0.2 + 70,
+        this.y + this.height * 0.3 + 100,
+        this.width / 3,
+        this.height / 2
+      );
+    }
+
+    context.drawImage(
+      this.image,
+      this.frameX * this.width,
+      0,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
   }
 }

@@ -1,4 +1,6 @@
-export const states = {
+import { Dust } from "./particle.js";
+
+const states = {
   STANDING_RIGHT: 0,
   STANDING_LEFT: 1,
   WALKING_RIGHT: 2,
@@ -16,309 +18,311 @@ export const states = {
 };
 
 class State {
-  constructor(state) {
+  constructor(state, game) {
     this.state = state;
+    this.game = game;
   }
 }
 
 export class StandingRight extends State {
-  constructor(player) {
-    super("STANDING RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("STANDING RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.frameY = 0;
-    this.player.maxFrame = 9;
+    this.game.player.frameX = 0;
+    this.game.player.frameY = 0;
+    this.game.player.maxFrame = 9;
   }
   handleInput(input) {
     if (input.includes("ArrowLeft") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_LEFT, -1);
+      this.game.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_LEFT, -1.5);
+      this.game.player.setState(states.RUNNING_LEFT, -1.5);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_RIGHT, 1.5);
+      this.game.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_RIGHT, 1);
+      this.game.player.setState(states.JUMPING_RIGHT, 1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_RIGHT, 0);
+      this.game.player.setState(states.ATTACK_RIGHT, 0);
     }
   }
 }
 
 export class StandingLeft extends State {
-  constructor(player) {
-    super("STANDING LEFT");
-    this.player = player;
+  constructor(game) {
+    super("STANDING LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 1;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 1;
   }
   handleInput(input) {
     if (input.includes("ArrowLeft") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_LEFT, -1);
+      this.game.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_LEFT, -1.5);
+      this.game.player.setState(states.RUNNING_LEFT, -1.5);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_RIGHT, 1.5);
+      this.game.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_LEFT, -1);
+      this.game.player.setState(states.JUMPING_LEFT, -1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_LEFT, 0);
+      this.game.player.setState(states.ATTACK_LEFT, 0);
     }
   }
 }
 
 export class WalkingRight extends State {
-  constructor(player) {
-    super("WALKING RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("WALKING RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.frameY = 2;
-    this.player.maxFrame = 9;
+    this.game.player.frameX = 0;
+    this.game.player.frameY = 2;
+    this.game.player.maxFrame = 9;
   }
   handleInput(input) {
     if (input.includes("ArrowLeft") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_LEFT, -1);
+      this.game.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_LEFT, -1.5);
+      this.game.player.setState(states.RUNNING_LEFT, -1.5);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_RIGHT, 1.5);
+      this.game.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_RIGHT, 1);
+      this.game.player.setState(states.JUMPING_RIGHT, 1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_RIGHT, 0);
+      this.game.player.setState(states.ATTACK_RIGHT, 0);
     } else if (!input.length) {
-      this.player.setState(states.STANDING_RIGHT, 0);
+      this.game.player.setState(states.STANDING_RIGHT, 0);
     }
   }
 }
 
 export class WalkingLeft extends State {
-  constructor(player) {
-    super("WALKING LEFT");
-    this.player = player;
+  constructor(game) {
+    super("WALKING LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.frameY = 3;
-    this.player.maxFrame = 9;
+    this.game.player.frameX = 0;
+    this.game.player.frameY = 3;
+    this.game.player.maxFrame = 9;
   }
   handleInput(input) {
     if (input.includes("ArrowRight") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_LEFT, -1.5);
+      this.game.player.setState(states.RUNNING_LEFT, -1.5);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_RIGHT, 1.5);
+      this.game.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_LEFT, -1);
+      this.game.player.setState(states.JUMPING_LEFT, -1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_LEFT, 0);
+      this.game.player.setState(states.ATTACK_LEFT, 0);
     } else if (!input.length) {
-      this.player.setState(states.STANDING_LEFT, 0);
+      this.game.player.setState(states.STANDING_LEFT, 0);
     }
   }
 }
 
 export class RunningRight extends State {
-  constructor(player) {
-    super("RUNNING RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("RUNNING RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.frameY = 4;
-    this.player.maxFrame = 9;
+    this.game.player.frameX = 0;
+    this.game.player.frameY = 4;
+    this.game.player.maxFrame = 9;
   }
   handleInput(input) {
+    this.game.particles.unshift(
+      new Dust(
+        this.game,
+        this.game.player.x + this.game.player.width * 0.5,
+        this.game.player.y + this.game.player.height - 80
+      )
+    );
+
     if (input.includes("ArrowLeft") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_LEFT, -1);
+      this.game.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowLeft") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_LEFT, -1.5);
+      this.game.player.setState(states.RUNNING_LEFT, -1.5);
     } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_RIGHT, 1);
+      this.game.player.setState(states.JUMPING_RIGHT, 1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_RIGHT, 0);
+      this.game.player.setState(states.ATTACK_RIGHT, 0);
     } else if (!input.length) {
-      this.player.setState(states.STANDING_RIGHT, 0);
+      this.game.player.setState(states.STANDING_RIGHT, 0);
     }
   }
 }
 
 export class RunningLeft extends State {
-  constructor(player) {
-    super("RUNNING LEFT");
-    this.player = player;
+  constructor(game) {
+    super("RUNNING LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.frameY = 5;
-    this.player.maxFrame = 9;
+    this.game.player.frameX = 0;
+    this.game.player.frameY = 5;
+    this.game.player.maxFrame = 9;
   }
   handleInput(input) {
+    this.game.particles.unshift(
+      new Dust(
+        this.game,
+        this.game.player.x + this.game.player.width * 0.5,
+        this.game.player.y + this.game.player.height - 80
+      )
+    );
     if (input.includes("ArrowLeft") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_LEFT, -1);
+      this.game.player.setState(states.WALKING_LEFT, -1);
     } else if (input.includes("ArrowRight") && input.includes("Shift")) {
-      this.player.setState(states.RUNNING_RIGHT, 1.5);
+      this.game.player.setState(states.RUNNING_RIGHT, 1.5);
     } else if (input.includes("ArrowRight") && !input.includes("Shift")) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     } else if (input.includes("ArrowUp")) {
-      this.player.setState(states.JUMPING_LEFT, -1);
+      this.game.player.setState(states.JUMPING_LEFT, -1);
     } else if (input.includes(" ")) {
-      this.player.setState(states.ATTACK_LEFT, 0);
+      this.game.player.setState(states.ATTACK_LEFT, 0);
     } else if (!input.length) {
-      this.player.setState(states.STANDING_LEFT, 0);
+      this.game.player.setState(states.STANDING_LEFT, 0);
     }
   }
 }
 
 export class JumpingRight extends State {
-  constructor(player) {
-    super("JUMPING RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("JUMPING RIGHT", game);
   }
 
   enter() {
-    if (this.player.onGround()) {
-      this.player.vy -= 30;
+    if (this.game.player.onGround()) {
+      this.game.player.vy -= 30;
     }
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 6;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 6;
   }
   handleInput(input) {
-    if (this.player.onGround()) {
-      this.player.setState(states.WALKING_RIGHT, 1);
+    if (this.game.player.onGround()) {
+      this.game.player.setState(states.WALKING_RIGHT, 1);
     }
   }
 }
 
 export class JumpingLeft extends State {
-  constructor(player) {
-    super("JUMPING LEFT");
-    this.player = player;
+  constructor(game) {
+    super("JUMPING LEFT", game);
   }
 
   enter() {
-    if (this.player.onGround()) {
-      this.player.vy -= 30;
+    if (this.game.player.onGround()) {
+      this.game.player.vy -= 30;
     }
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 7;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 7;
   }
   handleInput(input) {
-    if (this.player.onGround()) {
-      this.player.setState(states.WALKING_LEFT, -1);
+    if (this.game.player.onGround()) {
+      this.game.player.setState(states.WALKING_LEFT, -1);
     }
   }
 }
 
 export class AttackRight extends State {
-  constructor(player) {
-    super("ATTACK RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("ATTACK RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 8;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 8;
   }
   handleInput(input) {
     if (!input.length) {
-      this.player.setState(states.STANDING_RIGHT, 0);
+      this.game.player.setState(states.STANDING_RIGHT, 0);
     }
   }
 }
 
 export class AttackLeft extends State {
-  constructor(player) {
-    super("ATTACK LEFT");
-    this.player = player;
+  constructor(game) {
+    super("ATTACK LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 9;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 9;
   }
   handleInput(input) {
     if (!input.length) {
-      this.player.setState(states.STANDING_LEFT, 0);
+      this.game.player.setState(states.STANDING_LEFT, 0);
     }
   }
 }
 
 export class DieRight extends State {
-  constructor(player) {
-    super("DIE RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("DIE RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 10;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 10;
   }
   handleInput(input) {}
 }
 
 export class DieLeft extends State {
-  constructor(player) {
-    super("DIE LEFT");
-    this.player = player;
+  constructor(game) {
+    super("DIE LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 11;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 11;
   }
   handleInput(input) {}
 }
 
 export class HurtRight extends State {
-  constructor(player) {
-    super("HURT RIGHT");
-    this.player = player;
+  constructor(game) {
+    super("HURT RIGHT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 12;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 12;
   }
   handleInput(input) {}
 }
 
 export class HurtLeft extends State {
-  constructor(player) {
-    super("Hurt LEFT");
-    this.player = player;
+  constructor(game) {
+    super("Hurt LEFT", game);
   }
 
   enter() {
-    this.player.frameX = 0;
-    this.player.maxFrame = 9;
-    this.player.frameY = 13;
+    this.game.player.frameX = 0;
+    this.game.player.maxFrame = 9;
+    this.game.player.frameY = 13;
   }
   handleInput(input) {}
 }
