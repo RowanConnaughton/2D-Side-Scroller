@@ -88,6 +88,8 @@ export class GroundEnemySmall extends Enemy {
     this.speedY = 0;
     this.maxFrame = 23;
     this.type = "small";
+    this.lives = 2;
+    this.score = this.lives;
   }
 
   draw(context) {
@@ -127,6 +129,8 @@ export class GroundEnemyLarge extends Enemy {
     this.speedY = 0;
     this.maxFrame = 9;
     this.type = "large";
+    this.lives = 6;
+    this.score = this.lives;
   }
 
   draw(context) {

@@ -20,7 +20,7 @@ export default class UI {
 
     //lives
     for (let i = 0; i < this.game.lives; i++) {
-      context.drawImage(this.livesImage, 60 * i + 20, 95, 50, 47);
+      context.drawImage(this.livesImage, 60 * i + 20, 85, 50, 47);
     }
   }
 }
