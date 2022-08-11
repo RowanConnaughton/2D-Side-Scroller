@@ -10,8 +10,12 @@ class Enemy {
 
   update(deltaTime) {
     //movement
-    this.x -= this.speedX + this.game.speed;
-    this.y += this.speedY;
+    if (this.frameY === 2) {
+      this.x = +500;
+    } else {
+      this.x -= this.speedX + this.game.speed;
+      this.y += this.speedY;
+    }
 
     if (this.frameTimer > this.frameInterval) {
       this.frameTimer = 0;
@@ -19,7 +23,12 @@ class Enemy {
       if (this.frameX < this.maxFrame) {
         this.frameX++;
       } else {
-        this.frameX = 0;
+        if (this.frameY !== 2) {
+          this.frameX = 0;
+          this.frameY = 0;
+        } else {
+          this.frameX = 8;
+        }
       }
     } else {
       this.frameTimer += deltaTime;
@@ -39,7 +48,7 @@ class Enemy {
     context.drawImage(
       this.image,
       this.frameX * this.width,
-      0,
+      this.frameY * this.height,
       this.width,
       this.height,
       this.x,
@@ -47,6 +56,11 @@ class Enemy {
       this.width,
       this.height
     );
+  }
+
+  setState(y, x) {
+    this.frameY = y;
+    this.maxFrame = x;
   }
 }
 
@@ -121,6 +135,7 @@ export class GroundEnemyLarge extends Enemy {
   constructor(game) {
     super();
     this.game = game;
+    this.type = "large";
     this.width = 1200;
     this.height = 702;
     this.x = this.game.width;
@@ -129,7 +144,7 @@ export class GroundEnemyLarge extends Enemy {
     this.speedX = 1;
     this.speedY = 0;
     this.maxFrame = 9;
-    this.type = "large";
+    this.frameY = 0;
     this.lives = 6;
     this.score = this.lives;
   }
@@ -147,7 +162,7 @@ export class GroundEnemyLarge extends Enemy {
     context.drawImage(
       this.image,
       this.frameX * this.width,
-      0,
+      this.frameY * this.height,
       this.width,
       this.height,
       this.x,

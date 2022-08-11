@@ -17,7 +17,6 @@ class InputHandler {
       } else if (e.key === "d") {
         this.game.debug = !this.game.debug;
       }
-      console.log(this.keys);
     });
 
     window.addEventListener("keyup", (e) => {
@@ -31,8 +30,6 @@ class InputHandler {
       ) {
         this.keys.splice(this.keys.indexOf(e.key), 1);
       }
-
-      console.log(this.keys);
     });
   }
 }

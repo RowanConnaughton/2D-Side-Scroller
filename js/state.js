@@ -254,7 +254,6 @@ export class AttackRight extends State {
     this.run = 0;
   }
   handleInput(input) {
-    console.log(this.run);
     if (!input.length && this.game.player.frameX >= 9) {
       this.run += 1;
     }
