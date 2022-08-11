@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
       this.UI = new UI(this);
       this.enemies = [];
       this.particles = [];
+      this.explosions = [];
       this.enemyTimer = 0;
       this.enemyInterval = 3000;
       this.debug = true;
@@ -68,6 +69,11 @@ window.addEventListener("load", () => {
         if (particle.markedForDeletion) this.particles.splice(index, 1);
       });
 
+      this.explosions.forEach((explosion) => explosion.update(deltaTime));
+      this.explosions = this.explosions.filter(
+        (explosion) => !explosion.markedForDeletion
+      );
+
       this.foreground.update();
     }
 
@@ -80,6 +86,10 @@ window.addEventListener("load", () => {
 
       this.particles.forEach((particle) => {
         particle.draw(context);
+      });
+
+      this.explosions.forEach((explosion) => {
+        explosion.draw(context);
       });
 
       this.player.draw(context);
@@ -120,14 +130,14 @@ window.addEventListener("load", () => {
               ) {
                 //collision
 
-                enemy.x -= -500;
-
-                enemy.lives--;
-
                 if (enemy.lives <= 0) {
                   enemy.markedForDeletion = true;
                   this.score += enemy.score;
+                  this.addExplosion(enemy);
                 }
+                enemy.lives--;
+
+                enemy.x -= -500;
               }
             }
             //walk into enemy
@@ -172,14 +182,13 @@ window.addEventListener("load", () => {
               ) {
                 //collision
 
-                enemy.x -= -500;
-
-                enemy.lives--;
-
                 if (enemy.lives <= 0) {
-                  enemy.markedForDeletion = true;
                   this.score += enemy.score;
+                  this.addExplosion(enemy);
+                  enemy.markedForDeletion = true;
                 }
+                enemy.lives--;
+                enemy.x -= -500;
               }
             }
             //walk into enemy
@@ -191,8 +200,8 @@ window.addEventListener("load", () => {
               enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
                 this.player.x + this.player.width * 0.4 &&
               enemy.y + enemy.height * 0.3 + 100 <
-                this.y + 100 + this.player.height * 0.8 - 100 &&
-              enemy.y + enemy.height * 0.3 + 100 + enemy.height / 2 >
+                this.player.y + 100 + this.player.height * 0.8 - 100 &&
+              enemy.y + enemy.height * 0.3 + enemy.height / 2 >
                 this.player.y + 100
             ) {
               //collision
@@ -226,7 +235,7 @@ window.addEventListener("load", () => {
       });
     }
 
-    addExplosions(enemy) {
+    addExplosion(enemy) {
       this.explosions.push(
         new SmokeExplosion(
           this,

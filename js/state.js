@@ -248,7 +248,7 @@ export class AttackRight extends State {
   }
 
   enter() {
-    this.game.player.frameX = 0;
+    this.game.player.frameX = 1;
     this.game.player.maxFrame = 9;
     this.game.player.frameY = 8;
     this.run = 0;

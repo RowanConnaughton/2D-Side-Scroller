@@ -88,8 +88,9 @@ export class GroundEnemySmall extends Enemy {
     this.speedY = 0;
     this.maxFrame = 23;
     this.type = "small";
-    this.lives = 2;
+    this.lives = 3;
     this.score = this.lives;
+    this.hurt = false;
   }
 
   draw(context) {
