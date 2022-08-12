@@ -11,7 +11,7 @@ class Enemy {
   update(deltaTime) {
     //movement
     if (this.frameY === 2) {
-      this.x = +500;
+      this.x = +800;
     } else {
       this.x -= this.speedX + this.game.speed;
       this.y += this.speedY;

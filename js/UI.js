@@ -3,9 +3,12 @@ export default class UI {
     this.game = game;
     this.fontSize = 40;
     this.fontFamily = "ReggaeOne";
-    this.width = 350;
-    this.height = 150;
-    this.image = document.getElementById("scoreBG");
+    this.menuWidth = 800;
+    this.menuHeight = 892;
+    this.scoreWidth = 350;
+    this.scoreHeight = 150;
+    this.menuImage = document.getElementById("menuBG");
+    this.scoreImage = document.getElementById("scoreBG");
     this.livesImage = document.getElementById("lives");
   }
 
@@ -14,7 +17,78 @@ export default class UI {
     context.textAlgin = "left";
     context.fillStyle = this.game.fontColor;
 
-    context.drawImage(this.image, 0, 0, this.width, this.height);
+    let message1;
+    let message2;
+    let message3;
+
+    if (this.game.start) {
+      //menu background
+      context.drawImage(
+        this.menuImage,
+        this.game.width * 0.5 - 400,
+        this.game.height * 0.5 - 400,
+        this.menuWidth,
+        this.menuHeight
+      );
+    }
+
+    if (this.game.start) {
+      //Starting menu
+      message1 = "ENCHANTED FORREST";
+      message2 = "YOUR JOURNEY BEGINGS";
+      message3 = "CONTROLS";
+
+      context.save();
+      context.font = "50px " + this.fontFamily;
+      context.textAlign = "center";
+      context.shadowOffsetX = 5;
+      context.shadowOffsetY = 5;
+      context.shadowColor = "black";
+
+      context.fillText(
+        message1,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 300
+      );
+      context.fillText(
+        message2,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 240
+      );
+
+      context.fillText(
+        message3,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 100
+      );
+      context.restore();
+
+      context.fillText(
+        "Arrow keys for movement",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5
+      );
+      context.fillText(
+        "Hold shift to run",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5 + 100
+      );
+
+      context.fillText(
+        "Space to attack",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5 + 200
+      );
+
+      context.fillText(
+        "Press Enter To Start",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5 + 300
+      );
+    }
+
+    //score board
+    context.drawImage(this.scoreImage, 0, 0, this.scoreWidth, this.scoreHeight);
     //score
     context.fillText("Score: " + this.game.score, 25, 50);
 

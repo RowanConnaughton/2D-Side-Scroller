@@ -23,6 +23,7 @@ window.addEventListener("load", () => {
       this.groundMargin = 10;
       this.speed = 0;
       this.maxSpeed = 3;
+      this.start = true;
       this.background = new Background(this);
       this.player = new Player(this);
       this.foreground = new Foreground(this);
@@ -189,7 +190,7 @@ window.addEventListener("load", () => {
                   setTimeout(() => {
                     this.addExplosion(enemy);
                     enemy.markedForDeletion = true;
-                  }, 1000);
+                  }, 800);
                 } else {
                   enemy.setState(1, 9);
                   enemy.lives--;
@@ -264,8 +265,11 @@ window.addEventListener("load", () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    game.update(deltaTime);
+    if (!game.start) {
+      game.update(deltaTime);
+    }
     game.draw(ctx);
+
     requestAnimationFrame(animate);
   }
 
