@@ -79,6 +79,7 @@ export class FlyingEnemy extends Enemy {
     this.angle = 0;
     this.va = Math.random() * 0.1 + 0.1;
     this.type = "flying";
+    this.score = 1;
   }
 
   update(deltaTime) {
@@ -102,8 +103,8 @@ export class GroundEnemySmall extends Enemy {
     this.speedY = 0;
     this.maxFrame = 23;
     this.type = "small";
-    this.lives = 3;
-    this.score = this.lives;
+    this.lives = 1;
+    this.score = 3;
     this.hurt = false;
   }
 
@@ -145,8 +146,8 @@ export class GroundEnemyLarge extends Enemy {
     this.speedY = 0;
     this.maxFrame = 9;
     this.frameY = 0;
-    this.lives = 6;
-    this.score = this.lives;
+    this.lives = 3;
+    this.score = 6;
   }
 
   draw(context) {

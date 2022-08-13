@@ -21,7 +21,7 @@ export default class UI {
     let message2;
     let message3;
 
-    if (this.game.start) {
+    if (this.game.start || this.game.gameOver) {
       //menu background
       context.drawImage(
         this.menuImage,
@@ -32,8 +32,8 @@ export default class UI {
       );
     }
 
+    //Starting menu
     if (this.game.start) {
-      //Starting menu
       message1 = "ENCHANTED FORREST";
       message2 = "YOUR JOURNEY BEGINGS";
       message3 = "CONTROLS";
@@ -82,6 +82,56 @@ export default class UI {
 
       context.fillText(
         "Press Enter To Start",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5 + 300
+      );
+    }
+
+    //game over
+    if (this.game.gameOver) {
+      message1 = "BETTER LUCK NEXT TIME!";
+      message2 = "YOUR JOURNEY HAS ENDED";
+      message3 = "YOUR SCORE";
+
+      context.save();
+      context.font = "50px " + this.fontFamily;
+      context.textAlign = "center";
+      context.shadowOffsetX = 5;
+      context.shadowOffsetY = 5;
+      context.shadowColor = "black";
+
+      context.fillText(
+        message1,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 300
+      );
+      context.fillText(
+        message2,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 240
+      );
+
+      context.fillText(
+        message3,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 100
+      );
+      context.restore();
+
+      context.fillText(
+        "Points: " + this.game.score,
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5
+      );
+
+      context.fillText(
+        "Distance Traveled: " + this.game.distance + "m",
+        this.game.width * 0.5 - 350,
+        this.game.height * 0.5 + 100
+      );
+
+      context.fillText(
+        "Press Backspace To Restart",
         this.game.width * 0.5 - 350,
         this.game.height * 0.5 + 300
       );

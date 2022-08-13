@@ -4,6 +4,7 @@ import { Background, Foreground } from "./background.js";
 import { FlyingEnemy, GroundEnemySmall, GroundEnemyLarge } from "./enemy.js";
 import UI from "./UI.js";
 import { SmokeExplosion } from "./explosion.js";
+import { Platform } from "./platform.js";
 
 window.addEventListener("load", () => {
   const loading = document.getElementById("loading");
@@ -24,7 +25,9 @@ window.addEventListener("load", () => {
       this.speed = 0;
       this.maxSpeed = 3;
       this.start = true;
+      this.gameOver = false;
       this.background = new Background(this);
+
       this.player = new Player(this);
       this.foreground = new Foreground(this);
       this.input = new InputHandler(this);
@@ -32,26 +35,34 @@ window.addEventListener("load", () => {
       this.enemies = [];
       this.particles = [];
       this.explosions = [];
+      this.platforms = [];
       this.enemyTimer = 0;
       this.enemyInterval = 3000;
-      this.debug = true;
+      this.debug = false;
       this.score = 0;
       this.lives = 5;
       this.fontColor = "white";
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
+
       this.distance = 0;
     }
 
     update(deltaTime) {
       this.checkCollision();
 
+      if (this.lives <= 0) {
+        this.gameOver = true;
+      }
+
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
       //console.log("dist " + this.distance);
       //handle Enemies
       if (this.enemyTimer > this.enemyInterval) {
+        this.addPlatform();
         this.addEnemy();
+
         this.enemyTimer = 0;
       } else {
         this.enemyTimer += deltaTime;
@@ -75,11 +86,22 @@ window.addEventListener("load", () => {
         (explosion) => !explosion.markedForDeletion
       );
 
+      this.platforms.forEach((platform) => {
+        platform.update();
+      });
+      this.platforms = this.platforms.filter(
+        (platform) => !platform.markedForDeletion
+      );
+
       this.foreground.update();
     }
 
     draw(context) {
       this.background.draw(context);
+
+      this.platforms.forEach((platform) => {
+        platform.draw(context);
+      });
 
       this.enemies.forEach((enemy) => {
         enemy.draw(context);
@@ -92,6 +114,8 @@ window.addEventListener("load", () => {
       this.explosions.forEach((explosion) => {
         explosion.draw(context);
       });
+
+      console.log();
 
       this.player.draw(context);
 
@@ -108,6 +132,12 @@ window.addEventListener("load", () => {
       }
 
       this.enemies.push(new FlyingEnemy(this));
+    }
+
+    addPlatform() {
+      if (this.speed > 0 && Math.random() < 0.8) {
+        this.platforms.push(new Platform(this));
+      }
     }
 
     checkCollision() {
@@ -197,30 +227,30 @@ window.addEventListener("load", () => {
                   enemy.x -= -500;
                 }
               }
+            }
 
-              //walk into enemy
-              if (
-                enemy.x + enemy.width * 0.2 + 70 <
-                  this.player.x +
-                    this.player.width * 0.4 +
-                    this.player.width / 5 &&
-                enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
-                  this.player.x + this.player.width * 0.4 &&
-                enemy.y + enemy.height * 0.3 + 100 <
-                  this.player.y + 100 + this.player.height * 0.8 - 100 &&
-                enemy.y + enemy.height * 0.3 + enemy.height / 2 >
-                  this.player.y + 100
-              ) {
-                //collision
-                enemy.x -= -500;
+            //walk into enemy
+            if (
+              enemy.x + enemy.width * 0.2 + 70 <
+                this.player.x +
+                  this.player.width * 0.4 +
+                  this.player.width / 5 &&
+              enemy.x + enemy.width * 0.2 + 70 + enemy.width / 3 >
+                this.player.x + this.player.width * 0.4 &&
+              enemy.y + enemy.height * 0.3 + 100 <
+                this.player.y + 100 + this.player.height * 0.8 - 100 &&
+              enemy.y + enemy.height * 0.3 + enemy.height / 2 >
+                this.player.y + 100
+            ) {
+              //collision
+              enemy.x -= -500;
+              enemy.lives--;
+              this.player.setState(12, 0);
 
-                this.player.setState(12, 0);
-
-                //enemy.markedForDeletion = true;
-                this.score -= 2;
-                this.lives--;
-              } else {
-              }
+              //enemy.markedForDeletion = true;
+              this.score -= 2;
+              this.lives--;
+            } else {
             }
 
             break;
@@ -238,6 +268,7 @@ window.addEventListener("load", () => {
               this.player.setState(12, 0);
               enemy.markedForDeletion = true;
               this.score--;
+              this.lives--;
             } else {
             }
         }
@@ -264,13 +295,14 @@ window.addEventListener("load", () => {
     lastTime = timeStamp;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     if (!game.start) {
       game.update(deltaTime);
     }
     game.draw(ctx);
 
-    requestAnimationFrame(animate);
+    if (!game.gameOver) {
+      requestAnimationFrame(animate);
+    }
   }
 
   animate(0);
