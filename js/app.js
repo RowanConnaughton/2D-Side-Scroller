@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
       this.platforms = [];
       this.powerUps = [];
       this.enemyTimer = 0;
-      this.enemyInterval = Math.random() * 3000;
+      this.enemyInterval = 5000;
       this.platformTimer = 0;
       this.platformInterval = Math.random() * 20000;
       this.onPlatform = false;
@@ -61,13 +61,14 @@ window.addEventListener("load", () => {
     update(deltaTime) {
       this.checkCollision();
 
-      console.log(this.start);
       if (this.start) {
         this.menuSound.play();
+        this.menuSound.loop = true;
         this.gameSound.pause();
       } else {
-        this.menuSound.pause();
         this.gameSound.play();
+        this.gameSound.loop = true;
+        this.menuSound.pause();
       }
 
       if (this.lives <= 0) {
@@ -86,17 +87,18 @@ window.addEventListener("load", () => {
         } else {
           this.enemyTimer += deltaTime;
         }
+
+        //handle Enemies
+
+        this.enemies.forEach((enemy) => {
+          enemy.update(deltaTime);
+          if (enemy.markedForDeletion) {
+            this.enemies.splice(this.enemies.indexOf(enemy), 1);
+          }
+        });
       }
 
       //console.log("dist " + this.distance);
-      //handle Enemies
-
-      this.enemies.forEach((enemy) => {
-        enemy.update(deltaTime);
-        if (enemy.markedForDeletion) {
-          this.enemies.splice(this.enemies.indexOf(enemy), 1);
-        }
-      });
 
       //handle Particles
       this.particles.forEach((particle, index) => {
