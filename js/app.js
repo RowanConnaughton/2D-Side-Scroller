@@ -5,6 +5,7 @@ import { FlyingEnemy, GroundEnemySmall, GroundEnemyLarge } from "./enemy.js";
 import UI from "./UI.js";
 import { SmokeExplosion } from "./explosion.js";
 import { Platform } from "./platform.js";
+import { PowerUp } from "./powerUp.js";
 
 window.addEventListener("load", () => {
   const loading = document.getElementById("loading");
@@ -36,11 +37,14 @@ window.addEventListener("load", () => {
       this.particles = [];
       this.explosions = [];
       this.platforms = [];
+      this.powerUps = [];
       this.enemyTimer = 0;
       this.enemyInterval = 3000;
       this.platformTimer = 0;
       this.platformInterval = Math.random() * 10000;
       this.onPlatform = false;
+      this.powerUpTimer = 0;
+      this.powerUpInterval = 3000;
       this.debug = false;
       this.score = 0;
       this.lives = 5;
@@ -103,6 +107,22 @@ window.addEventListener("load", () => {
         (platform) => !platform.markedForDeletion
       );
 
+      //power up
+      if (this.powerUpTimer > this.powerUpInterval) {
+        this.addPowerUp();
+
+        this.powerUpTimer = 0;
+      } else {
+        this.powerUpTimer += deltaTime;
+      }
+
+      this.powerUps.forEach((powerUp) => {
+        powerUp.update();
+      });
+      this.powerUps = this.powerUps.filter(
+        (powerUp) => !powerUp.markedForDeletion
+      );
+
       this.foreground.update();
     }
 
@@ -111,6 +131,10 @@ window.addEventListener("load", () => {
 
       this.platforms.forEach((platform) => {
         platform.draw(context);
+      });
+
+      this.powerUps.forEach((powerUp) => {
+        powerUp.draw(context);
       });
 
       this.enemies.forEach((enemy) => {
@@ -145,8 +169,14 @@ window.addEventListener("load", () => {
     }
 
     addPlatform() {
-      if (this.speed > 0 && Math.random() > 0.1) {
+      if (this.speed > 0 && Math.random() > 0.6) {
         this.platforms.push(new Platform(this));
+      }
+    }
+
+    addPowerUp() {
+      if (this.speed > 0 && Math.random() >= 0.1) {
+        this.powerUps.push(new PowerUp(this));
       }
     }
 
@@ -305,6 +335,26 @@ window.addEventListener("load", () => {
           this.player.vy = 0;
           this.onPlatform = !this.onPlatform;
           //this.player.setState(0, 0);
+        }
+      });
+
+      this.powerUps.forEach((powerUp) => {
+        if (
+          powerUp.x + powerUp.width <
+            this.player.x + this.player.width * 0.4 + this.player.width / 5 &&
+          powerUp.x + powerUp.width + powerUp.width >
+            this.player.x + this.player.width * 0.4 &&
+          powerUp.y + powerUp.height <
+            this.player.y + 100 + this.player.height * 0.8 - 100 &&
+          powerUp.y + powerUp.height + powerUp.height > this.player.y + 100
+        ) {
+          //collision
+
+          powerUp.markedForDeletion = true;
+
+          if (this.lives < 5) {
+            this.lives++;
+          }
         }
       });
     }

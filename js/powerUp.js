@@ -1,11 +1,11 @@
-export class Platform {
+export class PowerUp {
   constructor(game) {
     this.game = game;
-    this.width = 839;
-    this.height = 231;
+    this.width = 120;
+    this.height = 108;
     this.x = this.game.width;
-    this.y = this.game.height * (Math.random() * (0.5 - 0.4) + 0.4);
-    this.image = document.getElementById("platform");
+    this.y = this.game.height * Math.random();
+    this.image = document.getElementById("powerup");
     this.markedForDeletion = false;
   }
 
