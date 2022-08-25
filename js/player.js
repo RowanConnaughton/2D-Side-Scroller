@@ -57,12 +57,14 @@ class Player {
     //horizontal movement
     this.x += this.speed;
 
-    if (input.includes("ArrowRight")) {
-      this.speed = this.maxSpeed;
-    } else if (input.includes("ArrowLeft")) {
-      this.speed = -this.maxSpeed;
-    } else {
-      this.speed = 0;
+    if (this.game.start) {
+      if (input.includes("ArrowRight")) {
+        this.speed = this.maxSpeed;
+      } else if (input.includes("ArrowLeft")) {
+        this.speed = -this.maxSpeed;
+      } else {
+        this.speed = 0;
+      }
     }
 
     //horrizontal limits

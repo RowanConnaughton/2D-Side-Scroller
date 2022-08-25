@@ -50,6 +50,10 @@ window.addEventListener("load", () => {
       this.fontColor = "white";
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
+      this.menuSound = new Audio();
+      this.menuSound.src = "./assets/audio/menu.wav";
+      this.gameSound = new Audio();
+      this.gameSound.src = "./assets/audio/game.ogg";
 
       this.distance = 0;
     }
@@ -57,21 +61,35 @@ window.addEventListener("load", () => {
     update(deltaTime) {
       this.checkCollision();
 
+      console.log(this.start);
+      if (this.start) {
+        this.menuSound.play();
+        this.gameSound.pause();
+      } else {
+        this.menuSound.pause();
+        this.gameSound.play();
+      }
+
       if (this.lives <= 0) {
         this.gameOver = true;
       }
 
       this.background.update();
-      this.player.update(this.input.keys, deltaTime);
+
+      if (!this.start) {
+        this.player.update(this.input.keys, deltaTime);
+
+        if (this.enemyTimer > this.enemyInterval) {
+          this.addEnemy();
+
+          this.enemyTimer = 0;
+        } else {
+          this.enemyTimer += deltaTime;
+        }
+      }
+
       //console.log("dist " + this.distance);
       //handle Enemies
-      if (this.enemyTimer > this.enemyInterval) {
-        this.addEnemy();
-
-        this.enemyTimer = 0;
-      } else {
-        this.enemyTimer += deltaTime;
-      }
 
       this.enemies.forEach((enemy) => {
         enemy.update(deltaTime);
@@ -378,12 +396,12 @@ window.addEventListener("load", () => {
     lastTime = timeStamp;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!game.start) {
-      game.update(deltaTime);
-    }
+
+    game.update(deltaTime);
+
     game.draw(ctx);
 
-    if (!game.gameOver) {
+    if (!game.gameOver || !game.start) {
       requestAnimationFrame(animate);
     }
   }
