@@ -38,6 +38,9 @@ window.addEventListener("load", () => {
       this.platforms = [];
       this.enemyTimer = 0;
       this.enemyInterval = 3000;
+      this.platformTimer = 0;
+      this.platformInterval = Math.random() * 10000;
+      this.onPlatform = false;
       this.debug = false;
       this.score = 0;
       this.lives = 5;
@@ -60,7 +63,6 @@ window.addEventListener("load", () => {
       //console.log("dist " + this.distance);
       //handle Enemies
       if (this.enemyTimer > this.enemyInterval) {
-        this.addPlatform();
         this.addEnemy();
 
         this.enemyTimer = 0;
@@ -85,6 +87,14 @@ window.addEventListener("load", () => {
       this.explosions = this.explosions.filter(
         (explosion) => !explosion.markedForDeletion
       );
+
+      if (this.platformTimer > this.platformInterval) {
+        this.addPlatform();
+
+        this.platformTimer = 0;
+      } else {
+        this.platformTimer += deltaTime;
+      }
 
       this.platforms.forEach((platform) => {
         platform.update();
@@ -135,7 +145,7 @@ window.addEventListener("load", () => {
     }
 
     addPlatform() {
-      if (this.speed > 0 && Math.random() < 0.8) {
+      if (this.speed > 0 && Math.random() > 0.1) {
         this.platforms.push(new Platform(this));
       }
     }
@@ -190,8 +200,10 @@ window.addEventListener("load", () => {
               this.player.setState(12, 0);
 
               //enemy.markedForDeletion = true;
-              this.score--;
-              this.lives--;
+              if (!this.debug) {
+                this.score--;
+                this.lives--;
+              }
             } else {
             }
             break;
@@ -248,8 +260,10 @@ window.addEventListener("load", () => {
               this.player.setState(12, 0);
 
               //enemy.markedForDeletion = true;
-              this.score -= 2;
-              this.lives--;
+              if (!this.debug) {
+                this.score -= 2;
+                this.lives--;
+              }
             } else {
             }
 
@@ -267,10 +281,30 @@ window.addEventListener("load", () => {
               //collision
               this.player.setState(12, 0);
               enemy.markedForDeletion = true;
-              this.score--;
-              this.lives--;
+              if (!this.debug) {
+                this.score--;
+                this.lives--;
+              }
             } else {
             }
+        }
+      });
+
+      this.platforms.forEach((platform) => {
+        if (
+          this.player.y + this.groundMargin + this.player.height * 0.8 <=
+            platform.y &&
+          this.player.y +
+            this.groundMargin +
+            this.player.height * 0.8 +
+            this.player.vy >=
+            platform.y &&
+          this.player.x + this.player.width * 0.4 >= platform.x &&
+          this.player.x <= platform.x + platform.width * 0.4
+        ) {
+          this.player.vy = 0;
+          this.onPlatform = !this.onPlatform;
+          //this.player.setState(0, 0);
         }
       });
     }

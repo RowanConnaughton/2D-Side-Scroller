@@ -215,7 +215,7 @@ export class JumpingRight extends State {
     this.game.player.frameY = 6;
   }
   handleInput(input) {
-    if (this.game.player.onGround()) {
+    if (this.game.player.onGround() || this.game.onPlatform) {
       this.game.player.setState(states.WALKING_RIGHT, 1);
     }
   }
@@ -317,7 +317,10 @@ export class HurtRight extends State {
     this.game.player.frameY = 12;
   }
   handleInput(input) {
-    if (this.game.player.frameX >= 9 && this.game.player.onGround()) {
+    if (
+      this.game.player.frameX >= 9 &&
+      (this.game.player.onGround() || this.game.onPlatform)
+    ) {
       this.game.player.setState(states.STANDING_RIGHT, 0);
     }
   }
