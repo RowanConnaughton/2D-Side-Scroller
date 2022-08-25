@@ -53,22 +53,35 @@ window.addEventListener("load", () => {
       this.menuSound = new Audio();
       this.menuSound.src = "./assets/audio/menu.wav";
       this.gameSound = new Audio();
-      this.gameSound.src = "./assets/audio/game.ogg";
-
+      this.gameSound.src = "./assets/audio/level1.wav";
+      this.level2Sound = new Audio();
+      this.level2Sound.src = "./assets/audio/level2.ogg";
       this.distance = 0;
+      this.level2 = false;
     }
 
     update(deltaTime) {
       this.checkCollision();
 
+      if (this.distance > 20) {
+        this.level2 = true;
+      }
+
       if (this.start) {
         this.menuSound.play();
         this.menuSound.loop = true;
         this.gameSound.pause();
+        this.level2Sound.pause();
       } else {
         this.gameSound.play();
         this.gameSound.loop = true;
         this.menuSound.pause();
+
+        if (this.level2) {
+          this.gameSound.pause();
+          this.level2Sound.play();
+          this.level2Sound.loop = true;
+        }
       }
 
       if (this.lives <= 0) {
