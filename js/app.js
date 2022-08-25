@@ -28,7 +28,6 @@ window.addEventListener("load", () => {
       this.start = true;
       this.gameOver = false;
       this.background = new Background(this);
-
       this.player = new Player(this);
       this.foreground = new Foreground(this);
       this.input = new InputHandler(this);
@@ -39,12 +38,12 @@ window.addEventListener("load", () => {
       this.platforms = [];
       this.powerUps = [];
       this.enemyTimer = 0;
-      this.enemyInterval = 3000;
+      this.enemyInterval = Math.random() * 3000;
       this.platformTimer = 0;
-      this.platformInterval = Math.random() * 10000;
+      this.platformInterval = Math.random() * 20000;
       this.onPlatform = false;
       this.powerUpTimer = 0;
-      this.powerUpInterval = 3000;
+      this.powerUpInterval = Math.random() * 8000;
       this.debug = false;
       this.score = 0;
       this.lives = 5;
@@ -169,13 +168,13 @@ window.addEventListener("load", () => {
     }
 
     addPlatform() {
-      if (this.speed > 0 && Math.random() > 0.6) {
+      if (this.speed > 0 && Math.random() > 0.8) {
         this.platforms.push(new Platform(this));
       }
     }
 
     addPowerUp() {
-      if (this.speed > 0 && Math.random() >= 0.1) {
+      if (this.speed > 0 && Math.random() >= 0.6) {
         this.powerUps.push(new PowerUp(this));
       }
     }
