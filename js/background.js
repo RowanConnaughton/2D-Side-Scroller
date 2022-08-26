@@ -37,11 +37,10 @@ export class Background {
     this.height = 1080;
 
     //get backgroundlayers images
-    this.backgroundLayer1 = document.getElementById("bgLayer1");
-    this.backgroundLayer2 = document.getElementById("bgLayer2");
-    this.backgroundLayer3 = document.getElementById("bgLayer3");
-    this.backgroundLayer4 = document.getElementById("bgLayer4");
-    this.backgroundLayer5 = document.getElementById("bgLayer5");
+    this.backgroundLayer1 = document.getElementById("bgLayer1L1");
+    this.backgroundLayer2 = document.getElementById("bgLayer2L1");
+    this.backgroundLayer3 = document.getElementById("bgLayer3L1");
+    this.backgroundLayer4 = document.getElementById("bgLayer4L1");
 
     this.layer1 = new Layer(
       this.game,
@@ -84,7 +83,6 @@ export class Background {
       this.layer2,
       this.layer3,
       this.layer4,
-      this.layer5,
     ];
   }
 
