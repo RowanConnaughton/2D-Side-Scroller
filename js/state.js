@@ -248,6 +248,9 @@ export class AttackRight extends State {
   }
 
   enter() {
+    this.game.attackSound.volume = 0.62;
+    this.game.attackSound.play();
+    this.game.attackSound.loop = true;
     this.game.player.frameX = 1;
     this.game.player.maxFrame = 9;
     this.game.player.frameY = 8;
@@ -258,6 +261,7 @@ export class AttackRight extends State {
       this.run += 1;
     }
     if (this.run >= 9) {
+      this.game.attackSound.pause();
       this.game.player.setState(states.STANDING_RIGHT, 0);
     }
   }
@@ -290,7 +294,14 @@ export class DieRight extends State {
     this.game.player.maxFrame = 9;
     this.game.player.frameY = 10;
   }
-  handleInput(input) {}
+  handleInput(input) {
+    if (
+      this.game.player.frameX >= 9 &&
+      (this.game.player.onGround() || this.game.onPlatform)
+    ) {
+      this.game.player.setState(states.STANDING_RIGHT, 0);
+    }
+  }
 }
 
 export class DieLeft extends State {

@@ -52,10 +52,28 @@ window.addEventListener("load", () => {
       this.player.currentState.enter();
       this.menuSound = new Audio();
       this.menuSound.src = "./assets/audio/menu.wav";
+      this.menuSelectSound = new Audio();
+      this.menuSelectSound.src = "./assets/audio/menuSelect.wav";
       this.gameSound = new Audio();
       this.gameSound.src = "./assets/audio/level1.wav";
       this.level2Sound = new Audio();
       this.level2Sound.src = "./assets/audio/level2.ogg";
+      this.crowSound = new Audio();
+      this.crowSound.src = "./assets/audio/crow_caw.wav";
+      this.smallEnemyHurtSound = new Audio();
+      this.smallEnemyHurtSound.src = "./assets/audio/smallHurt.wav";
+      this.largeEnemyHurtSound = new Audio();
+      this.largeEnemyHurtSound.src = "./assets/audio/largeHurt.wav";
+      this.smallEnemyDeathSound = new Audio();
+      this.smallEnemyDeathSound.src = "./assets/audio/smallDeath.wav";
+      this.largeEnemyDeathSound = new Audio();
+      this.largeEnemyDeathSound.src = "./assets/audio/largeDeath.wav";
+      this.heartSound = new Audio();
+      this.heartSound.src = "./assets/audio/heart.flac";
+      this.attackSound = new Audio();
+      this.attackSound.src = "./assets/audio/attack.wav";
+      this.hurtSound = new Audio();
+      this.hurtSound.src = "./assets/audio/hurt.wav";
       this.distance = 0;
       this.level2 = false;
     }
@@ -63,22 +81,28 @@ window.addEventListener("load", () => {
     update(deltaTime) {
       this.checkCollision();
 
-      if (this.distance > 20) {
+      if (this.distance > 100) {
         this.level2 = true;
       }
 
       if (this.start) {
+        this.speed = 0;
+        this.menuSound.volume = 0.2;
         this.menuSound.play();
+
         this.menuSound.loop = true;
         this.gameSound.pause();
         this.level2Sound.pause();
       } else {
+        this.gameSound.volume = 0.2;
         this.gameSound.play();
+
         this.gameSound.loop = true;
         this.menuSound.pause();
 
         if (this.level2) {
           this.gameSound.pause();
+          this.level2Sound.volume = 0.2;
           this.level2Sound.play();
           this.level2Sound.loop = true;
         }
@@ -91,71 +115,73 @@ window.addEventListener("load", () => {
       this.background.update();
 
       if (!this.start) {
-        this.player.update(this.input.keys, deltaTime);
+        if (!this.gameOver) {
+          this.player.update(this.input.keys, deltaTime);
 
-        if (this.enemyTimer > this.enemyInterval) {
-          this.addEnemy();
+          if (this.enemyTimer > this.enemyInterval) {
+            this.addEnemy();
 
-          this.enemyTimer = 0;
-        } else {
-          this.enemyTimer += deltaTime;
-        }
-
-        //handle Enemies
-
-        this.enemies.forEach((enemy) => {
-          enemy.update(deltaTime);
-          if (enemy.markedForDeletion) {
-            this.enemies.splice(this.enemies.indexOf(enemy), 1);
+            this.enemyTimer = 0;
+          } else {
+            this.enemyTimer += deltaTime;
           }
-        });
+
+          //handle Enemies
+
+          this.enemies.forEach((enemy) => {
+            enemy.update(deltaTime);
+            if (enemy.markedForDeletion) {
+              this.enemies.splice(this.enemies.indexOf(enemy), 1);
+            }
+          });
+
+          //console.log("dist " + this.distance);
+
+          //handle Particles
+          this.particles.forEach((particle, index) => {
+            particle.update();
+            if (particle.markedForDeletion) this.particles.splice(index, 1);
+          });
+
+          this.explosions.forEach((explosion) => explosion.update(deltaTime));
+          this.explosions = this.explosions.filter(
+            (explosion) => !explosion.markedForDeletion
+          );
+
+          if (this.platformTimer > this.platformInterval) {
+            this.addPlatform();
+
+            this.platformTimer = 0;
+          } else {
+            this.platformTimer += deltaTime;
+          }
+
+          this.platforms.forEach((platform) => {
+            platform.update();
+          });
+          this.platforms = this.platforms.filter(
+            (platform) => !platform.markedForDeletion
+          );
+
+          //power up
+          if (this.powerUpTimer > this.powerUpInterval) {
+            this.addPowerUp();
+
+            this.powerUpTimer = 0;
+          } else {
+            this.powerUpTimer += deltaTime;
+          }
+
+          this.powerUps.forEach((powerUp) => {
+            powerUp.update();
+          });
+          this.powerUps = this.powerUps.filter(
+            (powerUp) => !powerUp.markedForDeletion
+          );
+
+          this.foreground.update();
+        }
       }
-
-      //console.log("dist " + this.distance);
-
-      //handle Particles
-      this.particles.forEach((particle, index) => {
-        particle.update();
-        if (particle.markedForDeletion) this.particles.splice(index, 1);
-      });
-
-      this.explosions.forEach((explosion) => explosion.update(deltaTime));
-      this.explosions = this.explosions.filter(
-        (explosion) => !explosion.markedForDeletion
-      );
-
-      if (this.platformTimer > this.platformInterval) {
-        this.addPlatform();
-
-        this.platformTimer = 0;
-      } else {
-        this.platformTimer += deltaTime;
-      }
-
-      this.platforms.forEach((platform) => {
-        platform.update();
-      });
-      this.platforms = this.platforms.filter(
-        (platform) => !platform.markedForDeletion
-      );
-
-      //power up
-      if (this.powerUpTimer > this.powerUpInterval) {
-        this.addPowerUp();
-
-        this.powerUpTimer = 0;
-      } else {
-        this.powerUpTimer += deltaTime;
-      }
-
-      this.powerUps.forEach((powerUp) => {
-        powerUp.update();
-      });
-      this.powerUps = this.powerUps.filter(
-        (powerUp) => !powerUp.markedForDeletion
-      );
-
-      this.foreground.update();
     }
 
     draw(context) {
@@ -233,13 +259,18 @@ window.addEventListener("load", () => {
                 //collision
 
                 if (enemy.lives <= 0) {
+                  this.smallEnemyHurtSound.pause();
+                  this.smallEnemyDeathSound.volume = 0.42;
+                  this.smallEnemyDeathSound.play();
                   enemy.markedForDeletion = true;
                   this.score += enemy.score;
                   this.addExplosion(enemy);
+                } else {
+                  this.smallEnemyHurtSound.volume = 0.42;
+                  this.smallEnemyHurtSound.play();
+                  enemy.lives--;
+                  enemy.x -= -500;
                 }
-                enemy.lives--;
-
-                enemy.x -= -500;
               }
             }
             //walk into enemy
@@ -257,9 +288,21 @@ window.addEventListener("load", () => {
             ) {
               //collision
 
-              enemy.x -= -500;
-
-              this.player.setState(12, 0);
+              if (enemy.lives <= 0) {
+                this.smallEnemyHurtSound.pause();
+                this.smallEnemyDeathSound.volume = 0.42;
+                this.smallEnemyDeathSound.play();
+                enemy.markedForDeletion = true;
+                this.addExplosion(enemy);
+              } else {
+                enemy.x -= -500;
+                enemy.lives--;
+                this.smallEnemyHurtSound.volume = 0.42;
+                this.smallEnemyHurtSound.play();
+                this.hurtSound.volume = 0.32;
+                this.hurtSound.play();
+                this.player.setState(12, 0);
+              }
 
               //enemy.markedForDeletion = true;
               if (!this.debug) {
@@ -288,6 +331,9 @@ window.addEventListener("load", () => {
 
                 if (enemy.lives <= 0) {
                   this.score += enemy.score;
+                  this.largeEnemyHurtSound.pause();
+                  this.largeEnemyDeathSound.volume = 0.42;
+                  this.largeEnemyDeathSound.play();
 
                   enemy.setState(2, 8);
 
@@ -296,6 +342,8 @@ window.addEventListener("load", () => {
                     enemy.markedForDeletion = true;
                   }, 800);
                 } else {
+                  this.largeEnemyHurtSound.volume = 0.42;
+                  this.largeEnemyHurtSound.play();
                   enemy.setState(1, 9);
                   enemy.lives--;
                   enemy.x -= -500;
@@ -317,9 +365,28 @@ window.addEventListener("load", () => {
                 this.player.y + 100
             ) {
               //collision
-              enemy.x -= -500;
-              enemy.lives--;
-              this.player.setState(12, 0);
+
+              if (enemy.lives <= 0) {
+                this.largeEnemyHurtSound.pause();
+                this.largeEnemyDeathSound.volume = 0.42;
+                this.largeEnemyDeathSound.play();
+
+                enemy.setState(2, 8);
+
+                setTimeout(() => {
+                  this.addExplosion(enemy);
+                  enemy.markedForDeletion = true;
+                }, 800);
+              } else {
+                this.largeEnemyHurtSound.volume = 0.42;
+                this.largeEnemyHurtSound.play();
+                this.hurtSound.volume = 0.32;
+                this.hurtSound.play();
+                this.player.setState(12, 0);
+                enemy.setState(1, 9);
+                enemy.lives--;
+                enemy.x -= -500;
+              }
 
               //enemy.markedForDeletion = true;
               if (!this.debug) {
@@ -341,8 +408,13 @@ window.addEventListener("load", () => {
               enemy.y + enemy.height > this.player.y + 100
             ) {
               //collision
+              this.crowSound.volume = 0.82;
+              this.crowSound.play();
+              this.hurtSound.volume = 0.32;
+              this.hurtSound.play();
               this.player.setState(12, 0);
               enemy.markedForDeletion = true;
+
               if (!this.debug) {
                 this.score--;
                 this.lives--;
@@ -381,6 +453,8 @@ window.addEventListener("load", () => {
           powerUp.y + powerUp.height + powerUp.height > this.player.y + 100
         ) {
           //collision
+          this.heartSound.volume = 0.62;
+          this.heartSound.play();
 
           powerUp.markedForDeletion = true;
 

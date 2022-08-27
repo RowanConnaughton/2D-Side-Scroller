@@ -17,6 +17,7 @@ class InputHandler {
       } else if (e.key === "d") {
         this.game.debug = !this.game.debug;
       } else if (e.key === "Enter") {
+        this.game.menuSelectSound.play();
         this.game.start = !this.game.start;
       } else if (e.key === "Backspace") {
         location.reload();
