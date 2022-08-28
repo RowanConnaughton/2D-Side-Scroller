@@ -208,7 +208,7 @@ export class JumpingRight extends State {
 
   enter() {
     if (this.game.player.onGround()) {
-      this.game.player.vy -= 30;
+      this.game.player.vy -= 35;
     }
     this.game.player.frameX = 0;
     this.game.player.maxFrame = 9;
@@ -248,13 +248,13 @@ export class AttackRight extends State {
   }
 
   enter() {
+    this.run = 0;
     this.game.attackSound.volume = 0.62;
     this.game.attackSound.play();
     this.game.attackSound.loop = true;
     this.game.player.frameX = 1;
     this.game.player.maxFrame = 9;
     this.game.player.frameY = 8;
-    this.run = 0;
   }
   handleInput(input) {
     if (!input.length && this.game.player.frameX >= 9) {

@@ -23,12 +23,12 @@ class Player {
     this.x = 0;
     this.y = this.game.height - this.height - this.game.groundMargin;
     this.vy = 0;
-    this.weight = 0.8;
+    this.weight = 1.2;
     this.image = document.getElementById("player");
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrame = 9;
-    this.fps = 20;
+    this.fps = 40;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
     this.speed = 0;

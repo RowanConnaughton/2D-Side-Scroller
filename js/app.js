@@ -24,7 +24,7 @@ window.addEventListener("load", () => {
       this.height = height;
       this.groundMargin = 10;
       this.speed = 0;
-      this.maxSpeed = 3;
+      this.maxSpeed = 6;
       this.start = true;
       this.gameOver = false;
       this.background = new Background(this);
@@ -480,19 +480,29 @@ window.addEventListener("load", () => {
 
   let lastTime = 0;
 
+  const FPS = 60;
+  let prevTick = 0;
+
   function animate(timeStamp) {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
 
+    if (!game.gameOver || !game.start) {
+      requestAnimationFrame(animate);
+    }
+
+    // clamp to fixed framerate
+
+    let now = Math.round((FPS * Date.now()) / 1000);
+    if (now == prevTick) return;
+    prevTick = now;
+
+    // otherwise, do your stuff ...
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     game.update(deltaTime);
 
     game.draw(ctx);
-
-    if (!game.gameOver || !game.start) {
-      requestAnimationFrame(animate);
-    }
   }
 
   animate(0);
