@@ -233,7 +233,7 @@ window.addEventListener("load", () => {
     }
 
     addPowerUp() {
-      if (this.speed > 0 && Math.random() >= 0.6) {
+      if (this.speed > 0 && Math.random() >= 0.8) {
         this.powerUps.push(new PowerUp(this));
       }
     }
@@ -483,26 +483,23 @@ window.addEventListener("load", () => {
   const FPS = 60;
   let prevTick = 0;
 
+  let time;
+
   function animate(timeStamp) {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
 
-    if (!game.gameOver || !game.start) {
-      requestAnimationFrame(animate);
-    }
+    setTimeout(function () {
+      if (!game.gameOver || !game.start) {
+        requestAnimationFrame(animate);
+      }
 
-    // clamp to fixed framerate
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let now = Math.round((FPS * Date.now()) / 1000);
-    if (now == prevTick) return;
-    prevTick = now;
+      game.update(deltaTime);
 
-    // otherwise, do your stuff ...
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    game.update(deltaTime);
-
-    game.draw(ctx);
+      game.draw(ctx);
+    }, 1000 / FPS);
   }
 
   animate(0);
